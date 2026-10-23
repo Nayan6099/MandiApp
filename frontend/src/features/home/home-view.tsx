@@ -118,6 +118,19 @@ export function HomeView() {
           ))}
         </ul>
       </section>
+
+      <section aria-labelledby="info-title" className="rounded-xl border bg-card p-6 shadow-xs">
+        <h2 id="info-title" className="font-bold font-display text-xl sm:text-2xl">
+          Reliable Wholesale Mandi Prices Across India
+        </h2>
+        <p className="mt-3 text-muted-foreground text-sm sm:text-base leading-relaxed">
+          Mandi Bhav aggregates daily agricultural market rates across hundreds of APMC mandis in India.
+          Whether you are tracking seasonal arrivals for cash crops like wheat, soybean, and mustard, or daily
+          essential produce like onions, potatoes, and tomatoes, our platform keeps farmers, traders, and
+          consumers updated with government-verified modal rates, minimum and maximum trade ranges, and
+          multi-lingual transparency in 6 Indian languages.
+        </p>
+      </section>
     </div>
   );
 }

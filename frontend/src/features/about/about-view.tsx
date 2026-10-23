@@ -34,9 +34,40 @@ export function AboutView() {
         </section>
         <section>
           <h2 className="font-bold text-xl">{t('about.unitsTitle')}</h2>
-          <p className="mt-2">{t('about.units')}</p>
-          <p className="mt-2">{t('about.modal')}</p>
+          <p className="mt-2 text-muted-foreground leading-relaxed">{t('about.units')}</p>
+          <p className="mt-2 text-muted-foreground leading-relaxed">{t('about.modal')}</p>
         </section>
+
+        <section>
+          <h2 className="font-bold text-xl">Frequently Asked Questions</h2>
+          <dl className="mt-4 flex flex-col gap-4">
+            <div className="rounded-xl border bg-card p-4">
+              <dt className="font-semibold text-foreground">What is an APMC Mandi?</dt>
+              <dd className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+                Agricultural Produce Market Committees (APMCs) are marketing boards established by state
+                governments across India to regulate trading and ensure farmers receive fair wholesale prices
+                without middleman exploitation.
+              </dd>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <dt className="font-semibold text-foreground">What is the Modal Price?</dt>
+              <dd className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+                The modal price is the most frequently transacted rate for a commodity on that market day.
+                While minimum and maximum prices represent the trading boundaries, the modal price reflects
+                what the majority of buyers and sellers actually paid.
+              </dd>
+            </div>
+            <div className="rounded-xl border bg-card p-4">
+              <dt className="font-semibold text-foreground">Why do crop prices vary across mandis?</dt>
+              <dd className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+                Prices fluctuate based on daily supply arrivals, transportation costs, regional demand, crop
+                moisture content, variety, and grading standards. Comparing mandis helps farmers identify the
+                most profitable market before dispatching produce.
+              </dd>
+            </div>
+          </dl>
+        </section>
+
         <p className="rounded-lg border-accent border-l-4 bg-card p-4 text-muted-foreground text-sm">
           {t('about.note')}
         </p>

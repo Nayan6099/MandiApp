@@ -162,11 +162,11 @@ export function PricesView() {
       <div className="mt-6 mb-3 flex flex-wrap items-center justify-between gap-3" aria-live="polite">
         {data ? (
           <div>
-            <p className="font-medium text-sm sm:text-base">
+            <h2 className="font-medium text-sm sm:text-base">
               {data.total > 0
                 ? `${t('prices.results', { count: num(data.total) })} (${num(startRecord)}–${num(endRecord)})`
                 : t('prices.results', { count: num(0) })}
-            </p>
+            </h2>
             {data.date ? (
               <p className="text-muted-foreground text-xs sm:text-sm">
                 {t('common.dataOf', { date: date(data.date) })}

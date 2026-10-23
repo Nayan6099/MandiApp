@@ -17,10 +17,36 @@ import { SiteHeader } from '@/components/site-header';
 import { SkipLink } from '@/components/skip-link';
 
 export const metadata: Metadata = {
-  title: { default: 'Mandi Bhav – Daily mandi prices', template: '%s | Mandi Bhav' },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mandibhav.in'),
+  title: {
+    default: 'Mandi Bhav – Daily Wholesale Mandi Prices Across India',
+    template: '%s | Mandi Bhav',
+  },
   description:
-    'Daily wholesale mandi prices from across India in English, हिन्दी, ਪੰਜਾਬੀ, मराठी, ગુજરાતી and বাংলা. Source: AGMARKNET / data.gov.in.',
+    'Live wholesale mandi prices from across India in 6 languages. Check daily rates for onion, tomato, wheat, pulses & more updated from AGMARKNET.',
   applicationName: 'Mandi Bhav',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Mandi Bhav – Daily Wholesale Mandi Prices Across India',
+    description:
+      'Live wholesale mandi prices from across India in 6 languages. Check daily rates for onion, tomato, wheat, pulses & more updated from AGMARKNET.',
+    url: '/',
+    siteName: 'Mandi Bhav',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mandi Bhav – Daily Wholesale Mandi Prices Across India',
+    description:
+      'Live wholesale mandi prices from across India in 6 languages. Check daily rates for onion, tomato, wheat, pulses & more updated from AGMARKNET.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {

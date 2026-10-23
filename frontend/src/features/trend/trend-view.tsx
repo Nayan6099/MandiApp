@@ -106,7 +106,9 @@ export function TrendView() {
         ) : (
           <>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <CropName name={data.commodity} className="font-display text-2xl" />
+              <h2 className="font-display text-2xl">
+                <CropName name={data.commodity} />
+              </h2>
               {change !== null && change !== undefined ? (
                 <span
                   className={cn(

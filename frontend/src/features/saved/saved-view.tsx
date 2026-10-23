@@ -47,6 +47,7 @@ export function SavedView() {
         <EmptyState title={t('saved.empty')} hint={t('saved.emptyHint')} />
       ) : (
         <div className="flex flex-col gap-6">
+          <h2 className="sr-only">{t('saved.title')}</h2>
           <ul className="grid gap-3 sm:grid-cols-2">
             {pageItems.map((item, idx) => {
               const r = results[idx];

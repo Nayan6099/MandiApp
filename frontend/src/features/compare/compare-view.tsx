@@ -69,7 +69,9 @@ export function CompareView() {
         ) : (
           <>
             <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-              <CropName name={data.commodity} className="font-display text-2xl" />
+              <h2 className="font-display text-2xl">
+                <CropName name={data.commodity} />
+              </h2>
               <p className="text-muted-foreground text-sm">
                 {data.date ? t('common.dataOf', { date: date(data.date) }) : null}
                 {data.stats ? `, ${t('compare.mandis', { count: num(data.stats.marketCount) })}` : null}

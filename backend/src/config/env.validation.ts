@@ -1,5 +1,16 @@
 import { plainToInstance, Transform } from 'class-transformer';
-import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, Max, Min, validateSync } from 'class-validator';
+import {
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Matches,
+  Max,
+  Min,
+  validateSync,
+} from 'class-validator';
 
 const toBool = ({ value }: { value: unknown }) =>
   typeof value === 'string' ? value.toLowerCase() === 'true' : Boolean(value);
@@ -18,6 +29,21 @@ export class EnvVars {
   @IsBoolean()
   @Transform(toBool)
   DB_SYNCHRONIZE = true;
+
+  /** Our tables live in this schema (kept out of Supabase's public, auto-exposed schema). */
+  @IsOptional()
+  @Matches(/^[a-z_][a-z0-9_]*$/)
+  DB_SCHEMA = 'mandi';
+
+  /** auto = SSL for any non-local host (Supabase, RDS), off for localhost. */
+  @IsOptional()
+  @IsIn(['auto', 'true', 'false'])
+  DB_SSL: 'auto' | 'true' | 'false' = 'auto';
+
+  /** Optional path to the server's CA certificate (e.g. Supabase "SSL certificate"). If set, the certificate is verified. */
+  @IsOptional()
+  @IsString()
+  DB_SSL_CA = '';
 
   @IsOptional()
   @IsString()

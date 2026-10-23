@@ -48,43 +48,24 @@ cd "C:\Users\NAYAN MISHRA\OneDrive\Documents\New folder"
 pnpm install
 ```
 
-### 3. Database
+### 3. Database: Supabase (free hosted PostgreSQL)
 
-**Option A: your local PostgreSQL** (already installed). Create the database once:
+1. Sign up at supabase.com, then create a **New project**. Pick region **Mumbai (ap-south-1)** and save the database password.
+2. In the project, click **Connect**, choose **Session pooler**, and copy the URI.
+   - Use the Session pooler because it works on normal IPv4 internet. The "Direct connection" needs IPv6.
 
-```powershell
-psql -U postgres -c "CREATE DATABASE mandi_bhav;"
-```
+The app puts its tables in a separate `mandi` schema, not `public`. Supabase automatically exposes `public` tables through its REST API, so this keeps your data private.
 
-Then in `backend\.env` set:
-
-```
-DATABASE_URL=postgres://postgres:YOUR_PASSWORD@localhost:5432/mandi_bhav
-```
-
-**Option B: Docker** (after installing Docker Desktop):
-
-```powershell
-pnpm db:up
-```
-
-The default `DATABASE_URL` in `backend\.env` already matches this.
-
-### 4. API key
+### 4. API key from data.gov.in
 
 1. Log in at data.gov.in.
-2. Open **My Account** and copy your API key.
-3. Paste it in `backend\.env`:
+2. Open **My Account** and copy your **API key**.
 
-```
-DATA_GOV_API_KEY=your_key_here
-```
+`start.bat` asks for both values. Your typing is hidden, and they are saved only in `backend\.env`.
 
 ### 5. Start
 
-```powershell
-pnpm dev
-```
+Double-click **`start.bat`**, or run `pnpm dev`.
 
 | What         | URL                        |
 | ------------ | -------------------------- |

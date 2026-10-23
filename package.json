@@ -1,0 +1,26 @@
+{
+  "name": "mandi-bhav",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mandi Bhav — daily mandi prices of India in 6 languages (Next.js + NestJS + PostgreSQL)",
+  "scripts": {
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "dev": "pnpm -r --parallel run dev",
+    "dev:api": "pnpm --filter mandi-bhav-api dev",
+    "dev:web": "pnpm --filter mandi-bhav-web dev",
+    "api:generate": "pnpm --filter mandi-bhav-api openapi && pnpm --filter mandi-bhav-web api:generate",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter mandi-bhav-api test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.2"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "packageManager": "pnpm@10.28.0"
+}

@@ -1,0 +1,922 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Is the API and database up?",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/prices": {
+      "get": {
+        "operationId": "listPrices",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Uttar Pradesh",
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "commodity",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Onion",
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Free text search in commodity / market",
+            "schema": {
+              "example": "tom",
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM-DD. Default: latest available date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "commodity",
+              "type": "string",
+              "enum": [
+                "commodity",
+                "market",
+                "price_low",
+                "price_high"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricePageDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Today's prices with filters",
+        "tags": [
+          "prices"
+        ]
+      }
+    },
+    "/prices/compare": {
+      "get": {
+        "operationId": "comparePrices",
+        "parameters": [
+          {
+            "name": "commodity",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "Tomato",
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Punjab",
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM-DD. Default: latest available date",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompareResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One commodity across many mandis",
+        "tags": [
+          "prices"
+        ]
+      }
+    },
+    "/prices/trend": {
+      "get": {
+        "operationId": "getPriceTrend",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Uttar Pradesh",
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "commodity",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "example": "Wheat",
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 7,
+              "maximum": 180,
+              "default": 30,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Daily price trend of a commodity",
+        "tags": [
+          "prices"
+        ]
+      }
+    },
+    "/meta/states": {
+      "get": {
+        "operationId": "getStates",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "All states that have data",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/meta/districts": {
+      "get": {
+        "operationId": "getDistricts",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Uttar Pradesh",
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Districts (optionally of a state)",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/meta/markets": {
+      "get": {
+        "operationId": "getMarkets",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Uttar Pradesh",
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Mandis (optionally of a state/district)",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/meta/commodities": {
+      "get": {
+        "operationId": "getCommodities",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Uttar Pradesh",
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Ghaziabad",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Commodities (optionally by place)",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/stats/overview": {
+      "get": {
+        "operationId": "getOverview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Numbers for the home page",
+        "tags": [
+          "stats"
+        ]
+      }
+    },
+    "/stats/popular": {
+      "get": {
+        "operationId": "getPopularCommodities",
+        "parameters": [
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "Gujarat",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 30,
+              "default": 8,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopularResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Most traded commodities",
+        "tags": [
+          "stats"
+        ]
+      }
+    },
+    "/sync/status": {
+      "get": {
+        "operationId": "getSyncStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncStatusDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "When was data last updated?",
+        "tags": [
+          "sync"
+        ]
+      }
+    },
+    "/sync/run": {
+      "post": {
+        "operationId": "runSync",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncStatusDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Start a sync now (admin only)",
+        "tags": [
+          "sync"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Mandi Bhav API",
+    "description": "Daily wholesale mandi prices (₹ per quintal). Source: AGMARKNET via data.gov.in (OGD Platform India).",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [
+    {
+      "url": "/api"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "HealthDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "database": {
+            "type": "string",
+            "example": "up"
+          }
+        },
+        "required": [
+          "status",
+          "database"
+        ]
+      },
+      "PriceDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "market": {
+            "type": "string"
+          },
+          "commodity": {
+            "type": "string"
+          },
+          "variety": {
+            "type": "string"
+          },
+          "grade": {
+            "type": "string"
+          },
+          "arrivalDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-10-23"
+          },
+          "minPrice": {
+            "type": "number",
+            "description": "₹ per quintal"
+          },
+          "maxPrice": {
+            "type": "number",
+            "description": "₹ per quintal"
+          },
+          "modalPrice": {
+            "type": "number",
+            "description": "₹ per quintal (most common price)"
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "district",
+          "market",
+          "commodity",
+          "variety",
+          "grade",
+          "arrivalDate",
+          "minPrice",
+          "maxPrice",
+          "modalPrice"
+        ]
+      },
+      "PricePageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceDto"
+            }
+          },
+          "total": {
+            "type": "number"
+          },
+          "page": {
+            "type": "number"
+          },
+          "pageSize": {
+            "type": "number"
+          },
+          "totalPages": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "page",
+          "pageSize",
+          "totalPages",
+          "date"
+        ]
+      },
+      "CompareStatsDto": {
+        "type": "object",
+        "properties": {
+          "marketCount": {
+            "type": "number"
+          },
+          "lowest": {
+            "type": "number"
+          },
+          "highest": {
+            "type": "number"
+          },
+          "average": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "marketCount",
+          "lowest",
+          "highest",
+          "average"
+        ]
+      },
+      "CompareResultDto": {
+        "type": "object",
+        "properties": {
+          "commodity": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "stats": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CompareStatsDto"
+              }
+            ]
+          },
+          "items": {
+            "description": "Sorted: cheapest first",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceDto"
+            }
+          }
+        },
+        "required": [
+          "commodity",
+          "date",
+          "stats",
+          "items"
+        ]
+      },
+      "TrendPointDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "modalPrice": {
+            "type": "number",
+            "description": "Average modal price (₹/quintal)"
+          },
+          "minPrice": {
+            "type": "number"
+          },
+          "maxPrice": {
+            "type": "number"
+          },
+          "markets": {
+            "type": "number",
+            "description": "Number of mandis that reported"
+          }
+        },
+        "required": [
+          "date",
+          "modalPrice",
+          "minPrice",
+          "maxPrice",
+          "markets"
+        ]
+      },
+      "TrendResultDto": {
+        "type": "object",
+        "properties": {
+          "commodity": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendPointDto"
+            }
+          },
+          "changePercent": {
+            "type": "number",
+            "nullable": true,
+            "description": "% change first → last point"
+          }
+        },
+        "required": [
+          "commodity",
+          "points",
+          "changePercent"
+        ]
+      },
+      "OverviewDto": {
+        "type": "object",
+        "properties": {
+          "latestDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "totalRecords": {
+            "type": "number"
+          },
+          "recordsOnLatestDate": {
+            "type": "number"
+          },
+          "states": {
+            "type": "number"
+          },
+          "markets": {
+            "type": "number"
+          },
+          "commodities": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "latestDate",
+          "totalRecords",
+          "recordsOnLatestDate",
+          "states",
+          "markets",
+          "commodities"
+        ]
+      },
+      "PopularCommodityDto": {
+        "type": "object",
+        "properties": {
+          "commodity": {
+            "type": "string"
+          },
+          "markets": {
+            "type": "number"
+          },
+          "avgModalPrice": {
+            "type": "number"
+          },
+          "minModalPrice": {
+            "type": "number"
+          },
+          "maxModalPrice": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "commodity",
+          "markets",
+          "avgModalPrice",
+          "minModalPrice",
+          "maxModalPrice"
+        ]
+      },
+      "PopularResultDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PopularCommodityDto"
+            }
+          }
+        },
+        "required": [
+          "date",
+          "items"
+        ]
+      },
+      "SyncStatusDto": {
+        "type": "object",
+        "properties": {
+          "apiKeyConfigured": {
+            "type": "boolean"
+          },
+          "running": {
+            "type": "boolean"
+          },
+          "lastSuccessAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "lastRunStatus": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "running",
+              "success",
+              "failed"
+            ]
+          },
+          "lastRunAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "lastRecordsSaved": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "apiKeyConfigured",
+          "running",
+          "lastSuccessAt",
+          "lastRunStatus",
+          "lastRunAt",
+          "lastRecordsSaved"
+        ]
+      }
+    }
+  }
+}

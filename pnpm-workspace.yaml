@@ -1,0 +1,13 @@
+packages:
+  - backend
+  - frontend
+
+# Packages allowed to run install scripts (others are blocked for safety)
+onlyBuiltDependencies:
+  - "@nestjs/core"
+  - sharp
+  - unrs-resolver
+
+ignoredBuiltDependencies:
+  - "@scarf/scarf"
+  - esbuild

@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { QueryCacheModule } from './common/query-cache.js';
 import { buildDbConnection, ensureSchema } from './config/database.js';
 import { type EnvVars, validateEnv } from './config/env.validation.js';
 import { HealthController } from './health.controller.js';
@@ -42,8 +43,14 @@ import { SyncLog } from './sync/sync-log.entity.js';
       },
     }),
     ScheduleModule.forRoot(),
-    // Basic protection: max 120 requests per minute per IP.
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
+    // Basic protection: max THROTTLE_LIMIT requests per minute per IP, per endpoint (default 120).
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<EnvVars, true>) => [
+        { ttl: 60_000, limit: config.get('THROTTLE_LIMIT', { infer: true }) },
+      ],
+    }),
+    QueryCacheModule,
     PricesModule,
     SyncModule,
   ],

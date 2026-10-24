@@ -58,11 +58,12 @@ export class PriceQueryDto extends LocationFilterDto {
   @IsIn(SORT_OPTIONS)
   sort?: SortOption = 'commodity';
 
-  @ApiPropertyOptional({ default: 1, minimum: 1 })
+  @ApiPropertyOptional({ default: 1, minimum: 1, maximum: 10000 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(10000)
   page?: number = 1;
 
   @ApiPropertyOptional({ default: 20, minimum: 1, maximum: 100 })

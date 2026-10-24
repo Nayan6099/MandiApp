@@ -4,6 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CronJob } from 'cron';
 import { LessThan, type Repository } from 'typeorm';
+import { QueryCache } from '../common/query-cache.js';
 import type { EnvVars } from '../config/env.validation.js';
 import { MandiPrice } from '../prices/mandi-price.entity.js';
 import { DataGovClient } from './data-gov.client.js';
@@ -26,6 +27,7 @@ export class SyncService implements OnApplicationBootstrap {
     private readonly client: DataGovClient,
     private readonly config: ConfigService<EnvVars, true>,
     private readonly scheduler: SchedulerRegistry,
+    private readonly cache: QueryCache,
     @InjectRepository(MandiPrice) private readonly prices: Repository<MandiPrice>,
     @InjectRepository(SyncLog) private readonly logs: Repository<SyncLog>,
   ) {}
@@ -84,6 +86,7 @@ export class SyncService implements OnApplicationBootstrap {
         }
       }
       const removed = await this.cleanupOldRows();
+      this.cache.clear(); // new data → drop cached answers so users see it at once
       log.status = 'success';
       log.message = `trigger=${trigger}; removed_old=${removed}`;
       this.logger.log(`Sync done: fetched=${fetched}, saved=${saved}, removed_old=${removed}`);

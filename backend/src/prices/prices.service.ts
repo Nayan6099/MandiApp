@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository, SelectQueryBuilder } from 'typeorm';
+import { QueryCache } from '../common/query-cache.js';
 import { MandiPrice } from './mandi-price.entity.js';
 import type {
   CompareQueryDto,
@@ -39,7 +40,15 @@ const likeEscape = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`);
 
 @Injectable()
 export class PricesService {
-  constructor(@InjectRepository(MandiPrice) private readonly repo: Repository<MandiPrice>) {}
+  constructor(
+    @InjectRepository(MandiPrice) private readonly repo: Repository<MandiPrice>,
+    private readonly cache: QueryCache,
+  ) {}
+
+  /** Cache key = method name + its filters. */
+  private cached<T>(name: string, args: unknown, load: () => Promise<T>): Promise<T> {
+    return this.cache.wrap(`${name}:${JSON.stringify(args)}`, load);
+  }
 
   /* ---------------- filter helpers ---------------- */
 
@@ -76,7 +85,11 @@ export class PricesService {
 
   /* ---------------- endpoints ---------------- */
 
-  async list(q: PriceQueryDto): Promise<PricePageDto> {
+  list(q: PriceQueryDto): Promise<PricePageDto> {
+    return this.cached('list', q, () => this.loadList(q));
+  }
+
+  private async loadList(q: PriceQueryDto): Promise<PricePageDto> {
     const page = q.page ?? 1;
     const pageSize = q.pageSize ?? 20;
     const date = q.date ?? (await this.latestDate(q));
@@ -110,7 +123,11 @@ export class PricesService {
     };
   }
 
-  async compare(q: CompareQueryDto): Promise<CompareResultDto> {
+  compare(q: CompareQueryDto): Promise<CompareResultDto> {
+    return this.cached('compare', q, () => this.loadCompare(q));
+  }
+
+  private async loadCompare(q: CompareQueryDto): Promise<CompareResultDto> {
     const filter = { commodity: q.commodity, state: q.state };
     const date = q.date ?? (await this.latestDate(filter));
     if (!date) return { commodity: q.commodity, date: null, stats: null, items: [] };
@@ -146,7 +163,11 @@ export class PricesService {
     };
   }
 
-  async trend(q: TrendQueryDto): Promise<TrendResultDto> {
+  trend(q: TrendQueryDto): Promise<TrendResultDto> {
+    return this.cached('trend', q, () => this.loadTrend(q));
+  }
+
+  private async loadTrend(q: TrendQueryDto): Promise<TrendResultDto> {
     const end = await this.latestDate(q);
     if (!end) return { commodity: q.commodity, points: [], changePercent: null };
     const days = q.days ?? 30;
@@ -178,7 +199,11 @@ export class PricesService {
     return { commodity: q.commodity, points, changePercent };
   }
 
-  async popular(q: PopularQueryDto): Promise<PopularResultDto> {
+  popular(q: PopularQueryDto): Promise<PopularResultDto> {
+    return this.cached('popular', q, () => this.loadPopular(q));
+  }
+
+  private async loadPopular(q: PopularQueryDto): Promise<PopularResultDto> {
     const date = await this.latestDate({ state: q.state });
     if (!date) return { date: null, items: [] };
 
@@ -207,7 +232,11 @@ export class PricesService {
     };
   }
 
-  async overview(): Promise<OverviewDto> {
+  overview(): Promise<OverviewDto> {
+    return this.cached('overview', {}, () => this.loadOverview());
+  }
+
+  private async loadOverview(): Promise<OverviewDto> {
     const latestDate = await this.latestDate({});
     const all = await this.repo
       .createQueryBuilder('p')
@@ -243,7 +272,11 @@ export class PricesService {
 
   /* ---------------- dropdown lists ---------------- */
 
-  async distinct(
+  distinct(column: 'state' | 'district' | 'market' | 'commodity', f: LocationFilterDto): Promise<string[]> {
+    return this.cached(`distinct-${column}`, f, () => this.loadDistinct(column, f));
+  }
+
+  private async loadDistinct(
     column: 'state' | 'district' | 'market' | 'commodity',
     f: LocationFilterDto,
   ): Promise<string[]> {

@@ -87,6 +87,13 @@ export class EnvVars {
   @Transform(({ value }) => Number(value))
   KEEP_HISTORY_DAYS = 180;
 
+  /** Max requests per minute per IP, per endpoint. Raise it if many users share one IP (office, college). */
+  @IsOptional()
+  @IsInt()
+  @Min(10)
+  @Transform(({ value }) => Number(value))
+  THROTTLE_LIMIT = 120;
+
   /** Protects POST /api/sync/run. Empty = manual sync endpoint is disabled. */
   @IsOptional()
   @IsString()
